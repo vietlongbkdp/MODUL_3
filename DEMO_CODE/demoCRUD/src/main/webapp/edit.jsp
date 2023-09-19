@@ -9,7 +9,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>Title</title>
+    <title>Edit Page</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 
@@ -17,9 +17,9 @@
 <body>
 <div class="container">
     <div class="card container px-6" style="height: 100vh">
-        <h3 class="text-center">Create Student</h3>
+        <h3 class="text-center">Update Student Imfomation</h3>
         <form action="${pageContext.request.contextPath}/student?action=edit${index}" method="post">
-            <button type="submit" class="btn btn-success">SUBMIT</button>
+            <button type="submit" class="btn btn-success">CONFIRM</button>
             <div class="mb-3">
                 <label for="name" class="form-label">Input Name</label>
                 <input type="text" class="form-control" placeholder="Enter your name" id="name" name="name" value="${studentIndex.getName()}">
@@ -31,8 +31,8 @@
             <div>
                 <label for="gender" class="form-label">Select your gender</label>
                 <select class="form-control" name="gender" id="gender">
-                    <c:forEach var="gender" items="${genders}">
-                        <option value="${gender}">${gender}</option>
+                    <c:forEach var="gender"  items="${genders}">
+                        <option value="${gender}" ${gender == studentIndex.getGender() ? 'selected' : ''}>${gender}</option>
                     </c:forEach>
                 </select>
             </div>

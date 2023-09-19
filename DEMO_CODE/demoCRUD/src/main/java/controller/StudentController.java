@@ -29,13 +29,22 @@ public class StudentController extends HttpServlet {
             viewCreate(req, resp);
         }else if (action.contains("edit")) {
             viewEdit(req, resp, index);
-        } else if (action.contains("delete")) {
+        }
+        else if (action.contains("restore")) {
+            viewRestore(req, resp);
+        }else if (action.contains("delete")) {
             viewDelete(req, resp, index);
         }else showData(req,resp);
     }
 
+    private void viewRestore(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        req.setAttribute("studentRestore", studentService.getAllRestore());
+        req.getRequestDispatcher("restore.jsp").forward(req, resp);
+    }
+
     private void viewDelete(HttpServletRequest req, HttpServletResponse resp, int index) throws ServletException, IOException {
-        req.setAttribute("Message", "Bạn có chắc chắn muốn xoá không ?");
+        req.setAttribute("students", studentService.getAll());
+        req.setAttribute("obj", studentService.getElementById(index));
         req.getRequestDispatcher("delete.jsp").forward(req,resp);
     }
 
@@ -68,8 +77,20 @@ public class StudentController extends HttpServlet {
                 editStudent(req, resp, index);
             } else if (action.contains("delete")) {
                 deleteStudent(req, resp, index);
-            }else showData(req,resp);
+            }
+            else if (action.contains("restore")) {
+                restoreStudent(req, resp, index);
+            }else if (action.contains("no")) {
+                showData(req,resp);
+            } else showData(req,resp);
     }
+
+    private void restoreStudent(HttpServletRequest req, HttpServletResponse resp, int index) throws IOException, ServletException {
+        studentService.addStudent(studentService.getElementRestoreById(index));
+        req.setAttribute("studentRestore", studentService.getAllRestore());
+        req.getRequestDispatcher("restore.jsp").forward(req, resp);
+    }
+
     private void editStudent(HttpServletRequest req, HttpServletResponse resp, int index) throws IOException {
         String name = req.getParameter("name");
         LocalDate dob = LocalDate.parse(req.getParameter("dob"));
@@ -78,15 +99,15 @@ public class StudentController extends HttpServlet {
         resp.sendRedirect("/student?message=Updated!");
     }
     private void deleteStudent(HttpServletRequest req, HttpServletResponse resp, int index) throws ServletException, IOException {
-        req.setAttribute("students", studentService.getAll());
-        req.getRequestDispatcher("student.jsp").forward(req, resp);
+        studentService.deleteById(index);
+        resp.sendRedirect("/student?message=Deleted!");
     }
     private void createNewStudent(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         String name = req.getParameter("name");
         LocalDate dob = LocalDate.parse(req.getParameter("dob"));
         EGender gender = EGender.valueOf(req.getParameter("gender"));
         studentService.addStudent(name, dob, gender);
-                resp.sendRedirect("/student?message=Created!");
+        resp.sendRedirect("/student?message=Created!");
     }
     @Override
     public void init() throws ServletException {

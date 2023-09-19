@@ -9,9 +9,11 @@ import java.util.List;
 
 public class StudentService {
     private static final List<Student> students;
+    private static final List<Student> studentRestore;
     private static int idCurrent;
     static {
         students = new ArrayList<>();
+        studentRestore = new ArrayList<>();
         students.add(new Student(++idCurrent, "Long", LocalDate.of(1997,5,31), EGender.MALE));
         students.add(new Student(++idCurrent, "Đạt", LocalDate.of(1997,3,22), EGender.MALE));
         students.add(new Student(++idCurrent, "Tường", LocalDate.of(1998,1,30), EGender.MALE));
@@ -20,13 +22,18 @@ public class StudentService {
     public List<Student> getAll(){
         return students;
     }
-
+    public List<Student> getAllRestore(){
+        return studentRestore;
+    }
     public void addStudent(String name, LocalDate dob, EGender gender) {
         students.add(new Student(++idCurrent, name, dob, gender));
     }
 
     public Student getElementById(int index) {
         return students.stream().filter(student -> student.getId() == index).findFirst().orElse(null);
+    }
+    public Student getElementRestoreById(int index) {
+        return studentRestore.stream().filter(student -> student.getId() == index).findFirst().orElse(null);
     }
 
     public void updateStudent(int index, String name, LocalDate dob, EGender gender) {
@@ -37,5 +44,15 @@ public class StudentService {
                 s.setGender(gender);
             }
         }
+    }
+
+    public void deleteById(int index) {
+        studentRestore.add(students.stream().filter(student -> student.getId() == index).findFirst().orElse(null));
+        students.remove(students.stream().filter(student -> student.getId()==index).findFirst().orElse(null));
+    }
+
+    public void addStudent(Student elementRestoreById) {
+        students.add(elementRestoreById);
+        studentRestore.remove(elementRestoreById);
     }
 }
